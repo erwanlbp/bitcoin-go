@@ -28,4 +28,12 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     testCompile 'junit:junit:4.12'
+    compile 'org.mongodb:stitch:1.0.0-SNAPSHOT'
+
+}
+
+repositories {
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
 }
