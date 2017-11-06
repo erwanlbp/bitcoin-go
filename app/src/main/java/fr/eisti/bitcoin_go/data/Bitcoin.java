@@ -7,8 +7,11 @@ package fr.eisti.bitcoin_go.data;
 
 public class Bitcoin {
 
+    public static final String LOCATION = "location";
     private Location location;
+    public static final String NAME = "name";
     private String name;
+    public final static String VALUE = "value";
     private double value;
 
 
