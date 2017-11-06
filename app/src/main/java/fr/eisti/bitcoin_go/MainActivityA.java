@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 import fr.eisti.bitcoin_go.maps.MapsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivityA extends AppCompatActivity {
 
     public final static String APP_NAME = "BITCOIN_GO";
     public final static String NAME = "NAME";
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_mainA);
     }
 
     public void launchMap(View view) {

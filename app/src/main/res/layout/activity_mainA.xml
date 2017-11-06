@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical|center_horizontal|center"
     android:orientation="vertical"
-    tools:context="fr.eisti.bitcoin_go.MainActivity"
+    tools:context="fr.eisti.bitcoin_go.MainActivityA"
     android:weightSum="1" >
 
     <EditText
