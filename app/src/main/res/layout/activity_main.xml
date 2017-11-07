@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical|center_horizontal|center"
     android:orientation="vertical"
-    tools:context="fr.eisti.bitcoin_go.MainActivityA"
+    tools:context="fr.eisti.bitcoin_go.MainActivity"
     android:weightSum="1" >
 
     <EditText
@@ -34,5 +34,27 @@
         android:onClick="launchMap"
         android:text="@string/start_button"
         android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/main_log_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="logAll"
+            android:text="See all"/>
+
+        <Button
+            android:id="@+id/main_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="edit"
+            android:text="New ..."/>
+    </LinearLayout>
 
 </LinearLayout>

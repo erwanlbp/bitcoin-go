@@ -11,9 +11,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import fr.eisti.bitcoin_go.R;
 import fr.eisti.bitcoin_go.providers.GoogleMapsProvider;
 
-import static fr.eisti.bitcoin_go.MainActivityA.APP_NAME;
-import static fr.eisti.bitcoin_go.MainActivityA.LOCALISATION;
-import static fr.eisti.bitcoin_go.MainActivityA.NAME;
+import static fr.eisti.bitcoin_go.MainActivity.APP_NAME;
+import static fr.eisti.bitcoin_go.MainActivity.LOCALISATION;
+import static fr.eisti.bitcoin_go.MainActivity.NAME;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

@@ -6,7 +6,9 @@ package fr.eisti.bitcoin_go.data;
 
 public class Location {
 
+    public static final String LATITUDE = "latitude";
     private double latitude;
+    public static final String LONGITUDE = "longitude";
     private double longitude;
 
     public Location(double latitude, double longitude) {
