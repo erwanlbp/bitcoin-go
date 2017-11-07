@@ -1,5 +1,6 @@
-package fr.eisti.bitcoin_go.providers;
+package fr.eisti.bitcoin_go.data.elasticSearch;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -9,22 +10,17 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
-import fr.eisti.bitcoin_go.MainActivity;
-import fr.eisti.bitcoin_go.elasticSearch.SearchSingleton;
+import fr.eisti.bitcoin_go.data.Bitcoin;
 
-public class ElasticSearchProvider {
+public class ElasticSearch {
 
-    public static final String TAG = "SEARCH PROVIDER";
+    public static final String TAG = "##### ELASTIC SEARCH";
 
-    private MainActivity mainActivity;
+    public static void insertData(Context context, Bitcoin bitcoin) {
+        Log.i(TAG, "Insert : " + bitcoin.getName());
 
-    public ElasticSearchProvider(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-    }
-
-    public void insertData() {
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.PUT, SearchSingleton.URL, createJSONObject(), new Response.Listener<JSONObject>() {
+                (Request.Method.POST, SearchSingleton.URL + bitcoin.getName(), bitcoin.toJSONObject(), new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -34,16 +30,12 @@ public class ElasticSearchProvider {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.e(TAG, error.getMessage());
                     }
                 });
 
         // Access the RequestQueue through your singleton class.
-        SearchSingleton.getInstance(mainActivity).addToRequestQueue(jsObjRequest);
-
-    }
-
-    private JSONObject createJSONObject() {
+        SearchSingleton.getInstance(context).addToRequestQueue(jsObjRequest);
 
     }
 

@@ -1,4 +1,4 @@
-package fr.eisti.bitcoin_go.elasticSearch;
+package fr.eisti.bitcoin_go.data.elasticSearch;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 
 public class SearchSingleton {
 
-    public final static String URL = "localhost:9200";
+    public final static String URL = "http://urautoiymb:lwypa9mr9a@bitcoin-go-3784488190.eu-west-1.bonsaisearch.net/requests/data/";
 
     private static SearchSingleton mInstance;
     private RequestQueue mRequestQueue;

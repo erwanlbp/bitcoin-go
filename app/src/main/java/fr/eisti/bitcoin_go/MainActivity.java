@@ -12,7 +12,7 @@ import fr.eisti.bitcoin_go.data.Location;
 import fr.eisti.bitcoin_go.data.mongodb.Database;
 import fr.eisti.bitcoin_go.maps.MapShowAllActivity;
 import fr.eisti.bitcoin_go.maps.MapsActivity;
-import fr.eisti.bitcoin_go.providers.ElasticSearchProvider;
+import fr.eisti.bitcoin_go.data.elasticSearch.ElasticSearch;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,19 +21,17 @@ public class MainActivity extends AppCompatActivity {
     public final static String NAME = "NAME";
     public final static String LOCALISATION = "LOCALISATION";
 
-    private ElasticSearchProvider elasticSearchProvider;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        Bitcoin bit = new Bitcoin(new Location(Math.random() * 90, Math.random() * 180), "BTC" + (int) (Math.random() * 20), 10);
-        Log.i(TAG, bit.toString());
-        Database.getInstance().insertOne(this.getApplicationContext(), bit);
-
-        elasticSearchProvider = new ElasticSearchProvider(this);
+        for (int i = 0; i < 3; i++) {
+            Bitcoin bit = new Bitcoin(new Location(Math.random() * 90, Math.random() * 180), "BTC" + (int) (Math.random() * 50), 10);
+            Log.i(TAG, bit.toString());
+            Database.getInstance().insertOne(this.getApplicationContext(), bit);
+        }
 
     }
 
