@@ -4,9 +4,11 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
@@ -18,10 +20,17 @@ public class ElasticSearch {
 
     public static final String TAG = "##### ELASTIC SEARCH";
 
+    private static RequestQueue queue;
+
     public static void insertData(Context context, Bitcoin bitcoin) {
         Log.i(TAG, "Insert : " + bitcoin.getName());
 
+        if (queue == null) {
+            queue = Volley.newRequestQueue(context);
+        }
+
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
+
                 (Request.Method.POST, URL + bitcoin.getName(), bitcoin.toJSONObject(), new Response.Listener<JSONObject>() {
 
                     @Override
@@ -32,12 +41,12 @@ public class ElasticSearch {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, error.getMessage());
+                        Log.e(TAG, error.toString());
                     }
                 });
 
         // Access the RequestQueue through your singleton class.
-        SearchSingleton.getInstance(context).addToRequestQueue(jsObjRequest);
+        queue.add(jsObjRequest);
 
     }
 
