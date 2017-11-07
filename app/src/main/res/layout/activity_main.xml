@@ -24,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="50dp"
         android:hint="@string/localisation_tv"
-        android:textSize="18sp" />
+        android:text="Lagos"
+        android:textSize="18sp"/>
 
     <Button
         android:id="@+id/start_button"
