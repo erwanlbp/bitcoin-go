@@ -13,13 +13,9 @@ import com.mongodb.stitch.android.auth.anonymous.AnonymousAuthProvider;
 import com.mongodb.stitch.android.services.mongodb.MongoClient;
 
 import org.bson.BsonArray;
-import org.bson.BsonDecimal128;
 import org.bson.BsonDouble;
 import org.bson.Document;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,9 +26,6 @@ import fr.eisti.bitcoin_go.data.elasticSearch.ElasticSearch;
 /**
  * Created by ErwanLBP on 06/11/17.
  */
-
-// TODO Recherche par zone : insérer en tant que lat Long
-
 
 public class Database {
 
@@ -82,7 +75,6 @@ public class Database {
                                       loc.put("coordinates", new BsonArray(Arrays.asList(new BsonDouble(bitcoin.getLocation().getLatitude()), new BsonDouble(bitcoin.getLocation().getLongitude()))));
                                       updateDoc.put("location", loc);
 
-                                      Log.i(TAG, updateDoc.toJson());
                                       return db.getCollection("bitcoins").insertOne(updateDoc);
                                   }
                               }
@@ -90,11 +82,10 @@ public class Database {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Log.i(TAG, "Completed .");
-                    Toast.makeText(context, "Inserted !", Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "MongoDB inserted " + bitcoin.getName());
                 } else {
-                    Log.i(TAG, "Failed :" + task.getException().toString());
-                    Toast.makeText(context, "Failed !", Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "MongoDB insert failed : " + bitcoin.getName() + " :" + task.getException().toString());
+                    Toast.makeText(context, "MongoDB insert " + bitcoin.getName() + " failed !", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -114,9 +105,10 @@ public class Database {
                 if (!task.isSuccessful()) {
                     throw task.getException();
                 }
+
                 Document findDoc = new Document();
                 findDoc.put(Bitcoin.NAME, name);
-                Log.i(TAG, "Find by name ...");
+
                 return db.getCollection("bitcoins").find(findDoc);
             }
         });
@@ -136,25 +128,14 @@ public class Database {
                 if (!task.isSuccessful()) {
                     throw task.getException();
                 }
-                Log.i(TAG, "Find by location ...");
 
                 Document geo = new Document("type", "Point");
                 geo.put("coordinates", new BsonArray(Arrays.asList(new BsonDouble(location.getLatitude()), new BsonDouble(location.getLongitude()))));
                 Document nearSphere = new Document("$geometry", geo);
                 nearSphere.put("$maxDistance", "5000");
                 Document filter = new Document("$nearSphere", nearSphere);
-                Log.i(TAG, String.valueOf(filter));
 
                 return db.getCollection("bitcoins").find(filter);
-            }
-        }).addOnCompleteListener(new OnCompleteListener<List<Document>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Document>> task) {
-                if (task.isSuccessful()) {
-                    Log.i(TAG, task.getResult().toString());
-                    return;
-                }
-                Log.e(TAG, task.getException().toString());
             }
         });
     }
@@ -173,62 +154,8 @@ public class Database {
                 if (!task.isSuccessful()) {
                     throw task.getException();
                 }
-                Log.i(TAG, "Query everything ...");
                 return db.getCollection("bitcoins").find(new Document());
-            }
-        }).addOnCompleteListener(new OnCompleteListener<List<Document>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Document>> task) {
-                if (!task.isSuccessful()) {
-                    Log.e(TAG, task.getException().toString());
-                    return;
-                }
-                Log.i(TAG, "Everything : ");
-                for (Document doc : task.getResult()) {
-                    Log.i(TAG, doc.toString());
-                }
             }
         });
     }
 }
-
-/*
-       final StitchClient stitchClient = new StitchClient(this, "bictoin-go-gwmle");
-        final MongoClient mongoClient = new MongoClient(stitchClient, "mongodb-atlas");
-        final MongoClient.Database db = mongoClient.getDatabase("location");
-
-        stitchClient.logInWithProvider(new AnonymousAuthProvider())
-                .continueWithTask(new Continuation<String, Task<Void>>() {
-                                      @Override
-                                      public Task<Void> then(@NonNull Task<String> task) throws Exception {
-                                          final Document updateDoc = new Document(
-                                                  "owner_id",
-                                                  task.getResult()
-                                          );
-
-                                          updateDoc.put("number", 48);
-                                          return db.getCollection("bitcoins").updateOne(null, updateDoc, true);
-                                      }
-                                  }
-                ).continueWithTask(new Continuation<Void, Task<List<Document>>>() {
-            @Override
-            public Task<List<Document>> then(@NonNull Task<Void> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-                return db.getCollection("bitcoins").find(
-                        new Document("owner_id", stitchClient.getUserId())
-                );
-            }
-        }).addOnCompleteListener(new OnCompleteListener<List<Document>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Document>> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, task.getResult().toString());
-                    return;
-                }
-                Log.e(TAG, task.getException().toString());
-            }
-        });
- */
-

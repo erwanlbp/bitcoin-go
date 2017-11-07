@@ -42,8 +42,6 @@
             android:label="@string/title_activity_maps"/>
         <activity android:name=".EditActivity">
         </activity>
-        <activity android:name=".maps.MapShowAllActivity">
-        </activity>
     </application>
 
 </manifest>

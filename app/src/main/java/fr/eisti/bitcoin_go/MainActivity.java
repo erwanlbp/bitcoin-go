@@ -1,8 +1,8 @@
 package fr.eisti.bitcoin_go;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -10,9 +10,7 @@ import android.widget.EditText;
 import fr.eisti.bitcoin_go.data.Bitcoin;
 import fr.eisti.bitcoin_go.data.Location;
 import fr.eisti.bitcoin_go.data.mongodb.Database;
-import fr.eisti.bitcoin_go.maps.MapShowAllActivity;
 import fr.eisti.bitcoin_go.maps.MapsActivity;
-import fr.eisti.bitcoin_go.data.elasticSearch.ElasticSearch;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,12 +42,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(APP_NAME + NAME, editTextName.getText().toString());
         intent.putExtra(APP_NAME + LOCALISATION, editTextLocalisation.getText().toString());
 
-        startActivity(intent);
-    }
-
-    public void logAll(View view) {
-        Database.getInstance().listAll(this.getApplicationContext());
-        Intent intent = new Intent(this, MapShowAllActivity.class);
         startActivity(intent);
     }
 

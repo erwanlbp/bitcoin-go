@@ -12,7 +12,7 @@ public class Bitcoin {
 
     public static final String LOCATION = "location";
     private Location location;
-    public static final String NAME = "name";
+    public static final String NAME = "nom";
     private String name;
     public final static String VALUE = "value";
     private double value;
@@ -20,10 +20,14 @@ public class Bitcoin {
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("name", name);
-            jsonObject.put("value", value);
-            jsonObject.put("latitude", location.getLatitude());
-            jsonObject.put("longitude", location.getLongitude());
+            jsonObject.put(Bitcoin.NAME, name);
+            jsonObject.put(Bitcoin.VALUE, value);
+            JSONObject loc = new JSONObject();
+            JSONObject latlng = new JSONObject();
+            latlng.put(Location.LATITUDE, location.getLatitude());
+            latlng.put(Location.LONGITUDE, location.getLongitude());
+            loc.put("location", latlng);
+            jsonObject.put("pin", loc);
         } catch (JSONException e) {
             e.printStackTrace();
         }

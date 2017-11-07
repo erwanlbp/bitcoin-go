@@ -1,8 +1,11 @@
 package fr.eisti.bitcoin_go.providers;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,37 +13,35 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import org.bson.BsonArray;
-import org.bson.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.eisti.bitcoin_go.data.Bitcoin;
 import fr.eisti.bitcoin_go.data.Location;
-import fr.eisti.bitcoin_go.data.mongodb.Database;
+import fr.eisti.bitcoin_go.data.elasticSearch.ElasticSearch;
 import fr.eisti.bitcoin_go.maps.MapsActivity;
 
-public class GoogleMapsProvider {
+public class GoogleMapsProvider implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final String TAG = "### GOOGLEMAPSPROVIDER";
     private MapsActivity mapsActivity;
+    private final static int MY_LOCATION_REQUEST_CODE = 42;
+
+    private GoogleMap map;
 
     public GoogleMapsProvider(MapsActivity mapsActivity) {
         this.mapsActivity = mapsActivity;
     }
 
     public void printResult(String name, final String localisation, final GoogleMap googleMap) {
+        map = googleMap;
+
         Geocoder geocoder = new Geocoder(mapsActivity);
 
-        Task<List<Document>> task = null;
-
         if (!name.isEmpty()) {
-            task = Database.getInstance().find(mapsActivity.getApplicationContext(), name);
+            ElasticSearch.find(mapsActivity.getApplicationContext(), name, this);
+
         } else if (!localisation.isEmpty()) {
             try {
                 List<Address> results = geocoder.getFromLocationName(localisation, 1);
@@ -48,49 +49,50 @@ public class GoogleMapsProvider {
                     LatLng originalLatLng = new LatLng(results.get(0).getLatitude(), results.get(0).getLongitude());
                     Location location = new Location(originalLatLng.latitude, originalLatLng.longitude);
 
-                    task = Database.getInstance().find(mapsActivity.getApplicationContext(), location);
-
+                    ElasticSearch.find(mapsActivity.getApplicationContext(), location, 1000, this);
                 } else {
                     Toast.makeText(mapsActivity, "Aucun résultat trouvé", Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Aucun résultat trouvé");
+                    return;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
             }
         } else {
-            Toast.makeText(mapsActivity, "Localisation et nom null", Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "Localisation et nom null");
-            return;
+            ElasticSearch.find(mapsActivity.getApplicationContext(), this);
         }
 
-        if (task == null) {
-            Toast.makeText(mapsActivity.getApplicationContext(), "Task is null", Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "Task is null");
-            return;
+        if (ActivityCompat.checkSelfPermission(mapsActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+        } else {
+            ActivityCompat.requestPermissions(mapsActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_REQUEST_CODE);
         }
-
-        task.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Document>> task) {
-                if (task.isSuccessful()) {
-                    Log.i(TAG, "Task successful");
-                    Log.i(TAG, task.getResult().toString());
-                    LatLng latLng = new LatLng(0, 0);
-                    for (Document doc : task.getResult()) {
-                        Document location = (Document) doc.get("location");
-                        List list = ((List) location.get("coordinates"));
-                        latLng = new LatLng((Double) list.get(0), (Double) list.get(1));
-                        googleMap.addMarker(new MarkerOptions().position(latLng));
-                    }
-
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
-
-                    return;
-                }
-                Log.e(TAG, task.getException().toString());
-            }
-        });
 
     }
 
+    public void addOnMap(List<Location> locations) {
+        if (locations == null || locations.isEmpty()) {
+            Toast.makeText(mapsActivity.getApplicationContext(), "Nothing to add", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        LatLng latLng = new LatLng(0, 0);
+        for (Location loc : locations) {
+            latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+            map.addMarker(new MarkerOptions().position(latLng));
+        }
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_LOCATION_REQUEST_CODE) {
+            if (permissions.length >= 1 && permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                map.setMyLocationEnabled(true);
+            } else {
+                Toast.makeText(mapsActivity, "Asshole ...", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
