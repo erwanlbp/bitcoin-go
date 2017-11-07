@@ -14,13 +14,15 @@ import fr.eisti.bitcoin_go.data.Bitcoin;
 
 public class ElasticSearch {
 
+    public final static String URL = "https://elastic:yCHHvOlXb64kc4HXo6M5PTzI@ad6325711a0b6c0ac5db85b1293696d7.eu-west-1.aws.found.io:9243/bitcoin/data/";
+
     public static final String TAG = "##### ELASTIC SEARCH";
 
     public static void insertData(Context context, Bitcoin bitcoin) {
         Log.i(TAG, "Insert : " + bitcoin.getName());
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, SearchSingleton.URL + bitcoin.getName(), bitcoin.toJSONObject(), new Response.Listener<JSONObject>() {
+                (Request.Method.POST, URL + bitcoin.getName(), bitcoin.toJSONObject(), new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
