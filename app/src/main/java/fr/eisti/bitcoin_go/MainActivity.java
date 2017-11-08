@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 
 import fr.eisti.bitcoin_go.data.Bitcoin;
 import fr.eisti.bitcoin_go.data.Location;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     public final static String APP_NAME = "BITCOIN_GO";
     public final static String NAME = "NAME";
     public final static String LOCALISATION = "LOCALISATION";
+    public final static String DISTANCE = "DISTANCE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         for (int i = 0; i < 3; i++) {
-            Bitcoin bit = new Bitcoin(new Location(Math.random() * 90, Math.random() * 180), "BTC" + (int) (Math.random() * 50), 10);
+            Bitcoin bit = new Bitcoin(new Location(Math.random() * 180 - 90, -180 + Math.random() * 360), "BTC" + (int) (Math.random() * 50), 10);
             Log.i(TAG, bit.toString());
             Database.getInstance().insertOne(this.getApplicationContext(), bit);
         }
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchMap(View view) {
+        int distance = ((SeekBar) findViewById(R.id.main_seekbar)).getProgress();
+
         Intent intent = new Intent(this, MapsActivity.class);
 
         EditText editTextName = (EditText) findViewById(R.id.name_tv);
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         intent.putExtra(APP_NAME + NAME, editTextName.getText().toString());
         intent.putExtra(APP_NAME + LOCALISATION, editTextLocalisation.getText().toString());
+        intent.putExtra(APP_NAME + DISTANCE, distance);
 
         startActivity(intent);
     }

@@ -82,7 +82,7 @@ public class ElasticSearch {
         }
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, URL + "_search", formNameQuery(name), new Response.Listener<JSONObject>() {
+                (Request.Method.POST, URL + "_search", formNameQuery(name), new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -132,7 +132,7 @@ public class ElasticSearch {
         }
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, URL + "_search", formGeoDistanceQuery(baseLocation, distance), new Response.Listener<JSONObject>() {
+                (Request.Method.POST, URL + "_search", formGeoDistanceQuery(baseLocation, distance), new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -181,7 +181,7 @@ public class ElasticSearch {
         }
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, URL + "_search", formAllQuery(), new Response.Listener<JSONObject>() {
+                (Request.Method.POST, URL + "_search", formAllQuery(), new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {

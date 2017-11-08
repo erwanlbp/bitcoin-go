@@ -7,10 +7,13 @@ import android.location.Geocoder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.eisti.bitcoin_go.R;
 import fr.eisti.bitcoin_go.data.Location;
 import fr.eisti.bitcoin_go.data.elasticSearch.ElasticSearch;
 import fr.eisti.bitcoin_go.maps.MapsActivity;
@@ -34,7 +38,10 @@ public class GoogleMapsProvider implements ActivityCompat.OnRequestPermissionsRe
         this.mapsActivity = mapsActivity;
     }
 
-    public void printResult(String name, final String localisation, final GoogleMap googleMap) {
+    public void printResult(String name, final String localisation, int distance, final GoogleMap googleMap) {
+        Log.i(TAG, "Distance : " + distance);
+
+
         map = googleMap;
 
         Geocoder geocoder = new Geocoder(mapsActivity);
@@ -47,9 +54,10 @@ public class GoogleMapsProvider implements ActivityCompat.OnRequestPermissionsRe
                 List<Address> results = geocoder.getFromLocationName(localisation, 1);
                 if (results.size() != 0) {
                     LatLng originalLatLng = new LatLng(results.get(0).getLatitude(), results.get(0).getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(originalLatLng).title(localisation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     Location location = new Location(originalLatLng.latitude, originalLatLng.longitude);
 
-                    ElasticSearch.find(mapsActivity.getApplicationContext(), location, 1000, this);
+                    ElasticSearch.find(mapsActivity.getApplicationContext(), location, distance, this);
                 } else {
                     Toast.makeText(mapsActivity, "Aucun résultat trouvé", Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Aucun résultat trouvé");

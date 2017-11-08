@@ -12,6 +12,7 @@ import fr.eisti.bitcoin_go.R;
 import fr.eisti.bitcoin_go.providers.GoogleMapsProvider;
 
 import static fr.eisti.bitcoin_go.MainActivity.APP_NAME;
+import static fr.eisti.bitcoin_go.MainActivity.DISTANCE;
 import static fr.eisti.bitcoin_go.MainActivity.LOCALISATION;
 import static fr.eisti.bitcoin_go.MainActivity.NAME;
 
@@ -36,7 +37,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         String cityName = intent.getStringExtra(APP_NAME + NAME);
         String cityLocalication = intent.getStringExtra(APP_NAME + LOCALISATION);
+        int distance = intent.getIntExtra(APP_NAME + DISTANCE, 4200);
 
-        googleMapsProvider.printResult(cityName, cityLocalication, googleMap);
+        googleMapsProvider.printResult(cityName, cityLocalication, distance, googleMap);
     }
 }
