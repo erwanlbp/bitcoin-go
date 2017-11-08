@@ -21,7 +21,6 @@ import java.util.List;
 
 import fr.eisti.bitcoin_go.data.Bitcoin;
 import fr.eisti.bitcoin_go.data.Location;
-import fr.eisti.bitcoin_go.data.elasticSearch.ElasticSearch;
 
 /**
  * Created by ErwanLBP on 06/11/17.
@@ -50,7 +49,6 @@ public class Database {
 
     public void insertOne(final Context context, final Bitcoin bitcoin) {
 
-        ElasticSearch.insertData(context, bitcoin);
 
         // Connexion
         final StitchClient stitchClient = new StitchClient(context, "bictoin-go-gwmle");

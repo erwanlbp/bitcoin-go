@@ -10,7 +10,7 @@ import android.widget.SeekBar;
 
 import fr.eisti.bitcoin_go.data.Bitcoin;
 import fr.eisti.bitcoin_go.data.Location;
-import fr.eisti.bitcoin_go.data.mongodb.Database;
+import fr.eisti.bitcoin_go.data.elasticSearch.ElasticSearch;
 import fr.eisti.bitcoin_go.maps.MapsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 3; i++) {
             Bitcoin bit = new Bitcoin(new Location(Math.random() * 180 - 90, -180 + Math.random() * 360), "BTC" + (int) (Math.random() * 50), 10);
             Log.i(TAG, bit.toString());
-            Database.getInstance().insertOne(this.getApplicationContext(), bit);
+            ElasticSearch.insertData(getApplicationContext(), bit);
         }
 
     }
